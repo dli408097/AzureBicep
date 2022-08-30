@@ -1886,5 +1886,44 @@ namespace Bicep.Core.UnitTests.Diagnostics.LinterRuleTests
                     // pass
                 });
         }
+
+        [TestMethod]
+        // https://github.com/Azure/bicep/issues/8104
+        public void Asdfg()
+        {
+            string bicep = @"
+                param vaultName string = 'vault${uniqueString(resourceGroup().id)}'
+                param diskName string = 'disk${uniqueString(resourceGroup().id)}'
+
+                resource backupVault 'Microsoft.DataProtection/backupVaults@2021-01-01' existing = {
+                  name: vaultName
+                }
+
+                resource backupInstance 'Microsoft.DataProtection/backupvaults/backupInstances@2021-01-01' = {
+                  parent: backupVault
+                  name: diskName
+                  properties: {
+                    policyInfo: {
+                      policyParameters: {
+                        dataStoreParametersList: [
+                          {
+                            objectType: 'AzureOperationalStoreParameters'
+                            dataStoreType: 'OperationalStore'
+                            resourceGroupId: resourceGroup().id   // <<<<<<<<<<<<<<<<<<<<<<< SHOULDN'T FAIL BUT DOES
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+            ";
+            CompileAndTest(
+                bicep,
+                expectedMessages: new string[]
+                {
+                    // pass
+                });
+        }
+
     }
 }
