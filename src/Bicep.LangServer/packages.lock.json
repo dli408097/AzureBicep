@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0": {
+    "net7.0": {
       "Azure.Deployments.Internal.GenerateNotice": {
         "type": "Direct",
         "requested": "[0.1.13, )",
@@ -1901,7 +1901,7 @@
         }
       }
     },
-    "net6.0/linux-arm64": {
+    "net7.0/linux-arm64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -3002,7 +3002,7 @@
         }
       }
     },
-    "net6.0/linux-musl-x64": {
+    "net7.0/linux-musl-x64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -4103,7 +4103,7 @@
         }
       }
     },
-    "net6.0/linux-x64": {
+    "net7.0/linux-x64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -5204,7 +5204,7 @@
         }
       }
     },
-    "net6.0/osx-arm64": {
+    "net7.0/osx-arm64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -6305,7 +6305,7 @@
         }
       }
     },
-    "net6.0/osx-x64": {
+    "net7.0/osx-x64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -7406,7 +7406,7 @@
         }
       }
     },
-    "net6.0/win-arm64": {
+    "net7.0/win-arm64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -8490,7 +8490,7 @@
         }
       }
     },
-    "net6.0/win-x64": {
+    "net7.0/win-x64": {
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
         "resolved": "4.3.0",

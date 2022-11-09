@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0": {
+    "net7.0": {
       "Microsoft.AspNetCore.Components.WebAssembly": {
         "type": "Direct",
         "requested": "[6.0.10, )",
@@ -1856,7 +1856,7 @@
         }
       }
     },
-    "net6.0/browser-wasm": {
+    "net7.0/browser-wasm": {
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
         "resolved": "4.6.0",
