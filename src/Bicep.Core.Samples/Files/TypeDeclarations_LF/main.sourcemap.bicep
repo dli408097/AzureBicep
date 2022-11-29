@@ -57,32 +57,30 @@ type bool = string
 //@[166:168]     "bool": {
 
 param inlineObjectParam {
-//@[189:219]     "inlineObjectParam": {
+//@[174:204]     "inlineObjectParam": {
   foo: string
   bar: 100|200|300|400|500
   baz: sys.bool
 } = {
   foo: 'foo'
-//@[215:215]         "foo": "foo",
+//@[200:200]         "foo": "foo",
   bar: 300
-//@[216:216]         "bar": 300,
+//@[201:201]         "bar": 300,
   baz: false
-//@[217:217]         "baz": false
+//@[202:202]         "baz": false
 }
 
 param unionParam {property: 'ping'}|{property: 'pong'} = {property: 'pong'}
-//@[220:233]     "unionParam": {
+//@[205:218]     "unionParam": {
 
 param paramUsingType mixedArray
-//@[234:236]     "paramUsingType": {
+//@[219:221]     "paramUsingType": {
 
 type tuple = [
-//@[169:186]     "tuple": {
+//@[169:171]     "tuple": {
     @description('A leading string')
-//@[175:175]             "description": "A leading string"
     string
 
     @description('A second element using a type alias')
-//@[181:181]             "description": "A second element using a type alias"
     bar
 ]
