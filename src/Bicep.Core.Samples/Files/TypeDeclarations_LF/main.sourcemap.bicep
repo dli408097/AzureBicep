@@ -47,29 +47,42 @@ type aUnion = 'snap'|'crackle'|'pop'
 type expandedUnion = aUnion|'fizz'|'buzz'|'pop'
 //@[121:130]     "expandedUnion": {
 
+type tupleUnion = ['foo', 'bar', 'baz']|['fizz', 'buzz']|['snap', 'crackle', 'pop']
+//@[131:149]     "tupleUnion": {
+
 type mixedArray = ('heffalump'|'woozle'|{ shape: '*', size: '*'}|10|-10|true|!true|null)[]
-//@[131:146]     "mixedArray": {
+//@[150:165]     "mixedArray": {
 
 type bool = string
-//@[147:149]     "bool": {
+//@[166:168]     "bool": {
 
 param inlineObjectParam {
-//@[152:182]     "inlineObjectParam": {
+//@[189:219]     "inlineObjectParam": {
   foo: string
   bar: 100|200|300|400|500
   baz: sys.bool
 } = {
   foo: 'foo'
-//@[178:178]         "foo": "foo",
+//@[215:215]         "foo": "foo",
   bar: 300
-//@[179:179]         "bar": 300,
+//@[216:216]         "bar": 300,
   baz: false
-//@[180:180]         "baz": false
+//@[217:217]         "baz": false
 }
 
 param unionParam {property: 'ping'}|{property: 'pong'} = {property: 'pong'}
-//@[183:196]     "unionParam": {
+//@[220:233]     "unionParam": {
 
 param paramUsingType mixedArray
-//@[197:199]     "paramUsingType": {
+//@[234:236]     "paramUsingType": {
 
+type tuple = [
+//@[169:186]     "tuple": {
+    @description('A leading string')
+//@[175:175]             "description": "A leading string"
+    string
+
+    @description('A second element using a type alias')
+//@[181:181]             "description": "A second element using a type alias"
+    bar
+]
