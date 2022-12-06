@@ -92,6 +92,9 @@ namespace Bicep.Core.Emit
             );
         }
 
+        public Expression ConvertToIntermediateExpression(SyntaxBase syntax)
+            => expressionBuilder.Convert(syntax);
+
         public LanguageExpression ConvertExpression(SyntaxBase syntax)
             => ConvertExpression(expressionBuilder.Convert(syntax));
 
