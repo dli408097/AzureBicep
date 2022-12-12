@@ -389,11 +389,11 @@ var someText = isTrue ? sys.concat('a', sys.concat('b', 'c')) : 'someText'
 // Bicep functions that cannot be converted into ARM functions
 var scopesWithoutArmRepresentation = {
 //@[line234->line219]     "scopesWithoutArmRepresentation": {
+//@[line234->line220]       "subscription": {},
+//@[line234->line221]       "resourceGroup": {}
 //@[line234->line222]     },
   subscription: subscription('10b57a01-6350-4ce2-972a-6a13642f00bf')
-//@[line235->line220]       "subscription": "[createObject()]",
   resourceGroup: az.resourceGroup('10b57a01-6350-4ce2-972a-6a13642f00bf', 'myRgName')
-//@[line236->line221]       "resourceGroup": "[createObject()]"
 }
 
 var scopesWithArmRepresentation = {

@@ -25,30 +25,30 @@ var loadedTextInterpolation2 = 'Text: ${loadTextContent('Assets/TextFile.LF.txt'
 
 var loadedTextObject1 = {
 //@[line14->line060]     "loadedTextObject1": {
+//@[line14->line061]       "text": "[variables('$fxv#2')]"
 //@[line14->line062]     },
   'text' : loadTextContent('Assets/TextFile.CRLF.txt')
-//@[line15->line061]       "text": "[variables('$fxv#2')]"
 }
 var loadedTextObject2 = {
 //@[line17->line063]     "loadedTextObject2": {
+//@[line17->line064]       "text": "[variables('$fxv#3')]"
 //@[line17->line065]     },
   'text' : loadTextContent('Assets/TextFile.LF.txt')  
-//@[line18->line064]       "text": "[variables('$fxv#3')]"
 }
 var loadedBinaryInObject = {
 //@[line20->line066]     "loadedBinaryInObject": {
+//@[line20->line067]       "file": "[variables('$fxv#4')]"
 //@[line20->line068]     },
   file: loadFileAsBase64('Assets/binary')
-//@[line21->line067]       "file": "[variables('$fxv#4')]"
 }
 
 var loadedTextArray = [
 //@[line24->line069]     "loadedTextArray": [
+//@[line24->line070]       "[variables('$fxv#5')]",
+//@[line24->line071]       "[variables('$fxv#6')]"
 //@[line24->line072]     ],
   loadTextContent('Assets/TextFile.LF.txt')
-//@[line25->line070]       "[variables('$fxv#5')]",
   loadFileAsBase64('Assets/binary')
-//@[line26->line071]       "[variables('$fxv#6')]"
 ]
 
 var loadedTextArrayInObject = {
@@ -56,11 +56,11 @@ var loadedTextArrayInObject = {
 //@[line29->line078]     },
   'files' : [
 //@[line30->line074]       "files": [
+//@[line30->line075]         "[variables('$fxv#7')]",
+//@[line30->line076]         "[variables('$fxv#8')]"
 //@[line30->line077]       ]
     loadTextContent('Assets/TextFile.CRLF.txt')
-//@[line31->line075]         "[variables('$fxv#7')]",
     loadFileAsBase64('Assets/binary')
-//@[line32->line076]         "[variables('$fxv#8')]"
   ]
 }
 
