@@ -78,6 +78,10 @@ namespace Bicep.Core.Emit
 
                     break;
 
+                case SecretReferenceExpression secretRef:
+                    EmitExpression(ExpressionConverter.LowerSecretReference(secretRef));
+                    break;
+
                 default:
                     EmitLanguageExpression(expression);
                     break;
@@ -362,67 +366,9 @@ namespace Bicep.Core.Emit
 
         public void EmitModuleParameterValue(SyntaxBase syntax)
         {
-            if (syntax is InstanceFunctionCallSyntax instanceFunctionCall
-                && string.Equals(instanceFunctionCall.Name.IdentifierName, "getSecret", LanguageConstants.IdentifierComparison))
-            {
-                EmitModuleParameterGetSecret(instanceFunctionCall);
-                return;
-            }
-            if (syntax is TernaryOperationSyntax ternarySyntax)
-            {
-                writer.WriteValue(ExpressionSerializer.SerializeExpression(converter.ConvertModuleParameterTernaryExpression(ternarySyntax)));
-                return;
-            }
-            writer.WriteStartObject();
-            EmitProperty("value", syntax);
-            writer.WriteEndObject();
-        }
+            var expression = converter.ConvertModuleParameterExpression(syntax);
 
-        private void EmitModuleParameterGetSecret(InstanceFunctionCallSyntax instanceFunctionCallSyntax)
-        {
-            var (baseSyntax, _) = SyntaxHelper.UnwrapArrayAccessSyntax(instanceFunctionCallSyntax.BaseExpression);
-
-            if (context.SemanticModel.ResourceMetadata.TryLookup(baseSyntax) is not { } resource ||
-                !StringComparer.OrdinalIgnoreCase.Equals(resource.TypeReference.FormatType(), AzResourceTypeProvider.ResourceTypeKeyVault))
-            {
-                throw new InvalidOperationException("Cannot emit parameter's KeyVault secret reference.");
-            }
-
-            var keyVaultId = instanceFunctionCallSyntax.BaseExpression switch
-            {
-                ArrayAccessSyntax arrayAccessSyntax when resource is DeclaredResourceMetadata declared => converter
-                    .CreateConverterForIndexReplacement(declared.NameSyntax, arrayAccessSyntax.IndexExpression, instanceFunctionCallSyntax)
-                    .GetFullyQualifiedResourceId(resource),
-                _ => converter.GetFullyQualifiedResourceId(resource)
-            };
-            writer.WriteStartObject();
-            writer.WritePropertyName("reference");
-            writer.WriteStartObject();
-            writer.WritePropertyName("keyVault");
-            writer.WriteStartObject();
-
-            writer.WritePropertyName("id");
-
-            var keyVaultIdSerialised = ExpressionSerializer.SerializeExpression(keyVaultId);
-            writer.WriteValue(keyVaultIdSerialised);
-
-            writer.WriteEndObject(); // keyVault
-
-            writer.WritePropertyName("secretName");
-            var secretName = converter.ConvertExpression(instanceFunctionCallSyntax.GetArgumentByPosition(0).Expression);
-            var secretNameSerialised = ExpressionSerializer.SerializeExpression(secretName);
-            writer.WriteValue(secretNameSerialised);
-
-            if (instanceFunctionCallSyntax.Arguments.Count() > 1)
-            {
-                writer.WritePropertyName("secretVersion");
-                var secretVersion = converter.ConvertExpression(instanceFunctionCallSyntax.GetArgumentByPosition(1).Expression);
-                var secretVersionSerialised = ExpressionSerializer.SerializeExpression(secretVersion);
-                writer.WriteValue(secretVersionSerialised);
-            }
-
-            writer.WriteEndObject(); // reference
-            writer.WriteEndObject();
+            EmitExpression(expression);
         }
 
         public void EmitProperty(string name, LanguageExpression expressionValue)

@@ -7,7 +7,7 @@
     "_generator": {
       "name": "bicep",
       "version": "dev",
-      "templateHash": "14161189727262986423"
+      "templateHash": "8250218365530806188"
     }
   },
   "parameters": {
@@ -61,7 +61,7 @@
             "_generator": {
               "name": "bicep",
               "version": "dev",
-              "templateHash": "17902142949689823031"
+              "templateHash": "12232897505568082313"
             }
           },
           "parameters": {
@@ -157,7 +157,7 @@
                   "password": {
                     "reference": {
                       "keyVault": {
-                        "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', union(variables('defaultSqlLogicalServerProperties'), parameters('sqlLogicalServers')[copyIndex()]).passwordFromKeyVault.subscriptionId, parameters('sqlLogicalServers')[copyIndex()].passwordFromKeyVault.resourceGroupName), 'Microsoft.KeyVault/vaults', parameters('sqlLogicalServers')[copyIndex()].passwordFromKeyVault.name)]"
+                        "id": "[resourceInfo(format('sqlPassKeyVaults[{0}]', copyIndex())).id]"
                       },
                       "secretName": "[parameters('sqlLogicalServers')[copyIndex()].passwordFromKeyVault.secretName]"
                     }

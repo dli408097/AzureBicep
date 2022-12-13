@@ -37,26 +37,24 @@ namespace Bicep.Core.Emit
             this.expressionBuilder = new ExpressionBuilder(context, localReplacements);
         }
 
-        public LanguageExpression ConvertModuleParameterTernaryExpression(TernaryOperationSyntax ternary)
+        public Expression ConvertModuleParameterExpression(SyntaxBase syntax)
         {
-            LanguageExpression ConvertParameter(SyntaxBase syntax)
+            return syntax switch
             {
-                return syntax switch
-                {
-                    TernaryOperationSyntax innerTernary => ConvertModuleParameterTernaryExpression(innerTernary),
-                    InstanceFunctionCallSyntax instanceFunctionCall when string.Equals(instanceFunctionCall.Name.IdentifierName, "getSecret", LanguageConstants.IdentifierComparison) => ConvertGetSecretFunctionCall(instanceFunctionCall),
-                    _ => GetCreateObjectExpression(new JTokenExpression("value"), ConvertExpression(syntax))
-                };
-            }
-
-            return CreateFunction(
-                "if",
-                ConvertExpression(ternary.ConditionExpression),
-                ConvertParameter(ternary.TrueExpression),
-                ConvertParameter(ternary.FalseExpression));
+                TernaryOperationSyntax ternary => new TernaryExpression(
+                    ternary,
+                    expressionBuilder.Convert(ternary.ConditionExpression),
+                    ConvertModuleParameterExpression(ternary.TrueExpression),
+                    ConvertModuleParameterExpression(ternary.FalseExpression)),
+                InstanceFunctionCallSyntax instanceFunctionCall when
+                    instanceFunctionCall.Name.NameEquals("getSecret") => ConvertGetSecretFunctionCall(instanceFunctionCall),
+                _ => CreateObjectExpression(
+                    syntax,
+                    CreateObjectProperty("value", expressionBuilder.Convert(syntax))),
+            };
         }
 
-        private LanguageExpression ConvertGetSecretFunctionCall(InstanceFunctionCallSyntax instanceFunctionCallSyntax)
+        private SecretReferenceExpression ConvertGetSecretFunctionCall(InstanceFunctionCallSyntax instanceFunctionCallSyntax)
         {
             var (baseSyntax, _) = SyntaxHelper.UnwrapArrayAccessSyntax(instanceFunctionCallSyntax.BaseExpression);
 
@@ -66,30 +64,20 @@ namespace Bicep.Core.Emit
                 throw new InvalidOperationException("Cannot emit parameter's KeyVault secret reference.");
             }
 
-            var keyVaultId = instanceFunctionCallSyntax.BaseExpression switch
-            {
-                ArrayAccessSyntax arrayAccessSyntax when resource is DeclaredResourceMetadata declared =>
-                    CreateConverterForIndexReplacement(declared.NameSyntax, arrayAccessSyntax.IndexExpression, instanceFunctionCallSyntax)
-                    .GetFullyQualifiedResourceId(resource),
-                _ => GetFullyQualifiedResourceId(resource)
-            };
+            var keyVaultId = new PropertyAccessExpression(
+                instanceFunctionCallSyntax.BaseExpression,
+                expressionBuilder.Convert(instanceFunctionCallSyntax.BaseExpression),
+                "id");
 
-            if (instanceFunctionCallSyntax.Arguments.Count() > 1)
-            {
-                return GetCreateObjectExpression(
-                    new JTokenExpression("reference"), GetCreateObjectExpression(
-                        new JTokenExpression("keyVault"), GetCreateObjectExpression(new JTokenExpression("id"), keyVaultId),
-                        new JTokenExpression("secretName"), ConvertExpression(instanceFunctionCallSyntax.GetArgumentByPosition(0).Expression),
-                        new JTokenExpression("secretVersion"), ConvertExpression(instanceFunctionCallSyntax.GetArgumentByPosition(1).Expression)
-                    )
-                );
-            }
-            return GetCreateObjectExpression(
-                new JTokenExpression("reference"), GetCreateObjectExpression(
-                    new JTokenExpression("keyVault"), GetCreateObjectExpression(new JTokenExpression("id"), keyVaultId),
-                    new JTokenExpression("secretName"), ConvertExpression(instanceFunctionCallSyntax.GetArgumentByPosition(0).Expression)
-                    )
-            );
+            var secretVersion = instanceFunctionCallSyntax.Arguments.Count() > 1 ?
+                expressionBuilder.Convert(instanceFunctionCallSyntax.GetArgumentByPosition(1).Expression) :
+                null;
+
+            return new SecretReferenceExpression(
+                instanceFunctionCallSyntax,
+                keyVaultId,
+                expressionBuilder.Convert(instanceFunctionCallSyntax.GetArgumentByPosition(0).Expression),
+                secretVersion);
         }
 
         public Expression ConvertToIntermediateExpression(SyntaxBase syntax)
@@ -97,6 +85,39 @@ namespace Bicep.Core.Emit
 
         public LanguageExpression ConvertExpression(SyntaxBase syntax)
             => ConvertExpression(expressionBuilder.Convert(syntax));
+
+
+        static ObjectExpression CreateObjectExpression(SyntaxBase? sourceSyntax, params ObjectProperty[] properties)
+            => new(
+                sourceSyntax,
+                properties.ToImmutableArray());
+
+        static ObjectProperty CreateObjectProperty(string key, Expression value)
+            => new(
+                new StringLiteralExpression(value.SourceSyntax, key),
+                value);
+
+        public static Expression LowerSecretReference(SecretReferenceExpression expression)
+        {
+            var referenceProps = new List<ObjectProperty>() {
+                CreateObjectProperty("keyVault", CreateObjectExpression(
+                    expression.SourceSyntax,
+                    CreateObjectProperty("id", expression.KeyVaultId)
+                )),
+                CreateObjectProperty("secretName", expression.SecretName),
+            };
+
+            if (expression.SecretVersion is not null)
+            {
+                referenceProps.Add(CreateObjectProperty("secretVersion", expression.SecretVersion));
+            }
+
+            return CreateObjectExpression(
+                expression.SourceSyntax,
+                CreateObjectProperty("reference", CreateObjectExpression(
+                    expression.SourceSyntax,
+                    referenceProps.ToArray())));
+        }
 
         /// <summary>
         /// Converts the specified bicep expression tree into an ARM template expression tree.
@@ -213,6 +234,9 @@ namespace Bicep.Core.Emit
                     return exp.Name is null
                         ? CreateFunction("copyIndex")
                         : CreateFunction("copyIndex", new JTokenExpression(exp.Name));
+
+                case SecretReferenceExpression secretRef:
+                    return ConvertExpression(LowerSecretReference(secretRef));
 
                 default:
                     throw new NotImplementedException($"Cannot emit unexpected expression of type {expression.GetType().Name}");

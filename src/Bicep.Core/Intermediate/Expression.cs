@@ -250,3 +250,14 @@ public record LambdaExpression(
     public override void Accept(IExpressionVisitor visitor)
         => visitor.VisitLambdaExpression(this);
 }
+
+public record SecretReferenceExpression(
+    SyntaxBase? SourceSyntax,
+    Expression KeyVaultId,
+    Expression SecretName,
+    Expression? SecretVersion
+) : Expression(SourceSyntax)
+{
+    public override void Accept(IExpressionVisitor visitor)
+        => visitor.VisitSecretReferenceExpression(this);
+}

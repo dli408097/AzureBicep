@@ -1982,21 +1982,8 @@ module secureModule1 'child/secureParams.bicep' = {
 //@[line287->line1711]         "mode": "Incremental",
 //@[line287->line1712]         "parameters": {
 //@[line287->line1713]           "secureStringParam1": {
-//@[line287->line1714]             "reference": {
-//@[line287->line1715]               "keyVault": {
-//@[line287->line1716]                 "id": "[resourceId('Microsoft.KeyVault/vaults', 'testkeyvault')]"
-//@[line287->line1717]               },
-//@[line287->line1718]               "secretName": "mySecret"
-//@[line287->line1719]             }
 //@[line287->line1720]           },
 //@[line287->line1721]           "secureStringParam2": {
-//@[line287->line1722]             "reference": {
-//@[line287->line1723]               "keyVault": {
-//@[line287->line1724]                 "id": "[resourceId('Microsoft.KeyVault/vaults', 'testkeyvault')]"
-//@[line287->line1725]               },
-//@[line287->line1726]               "secretName": "mySecret",
-//@[line287->line1727]               "secretVersion": "secretVersion"
-//@[line287->line1728]             }
 //@[line287->line1729]           }
 //@[line287->line1730]         },
 //@[line287->line1731]         "template": {
@@ -2032,7 +2019,20 @@ module secureModule1 'child/secureParams.bicep' = {
 //@[line288->line1706]       "name": "secureModule1",
   params: {
     secureStringParam1: kv.getSecret('mySecret')
+//@[line290->line1714]             "reference": {
+//@[line290->line1715]               "keyVault": {
+//@[line290->line1716]                 "id": "[resourceId('Microsoft.KeyVault/vaults', 'testkeyvault')]"
+//@[line290->line1717]               },
+//@[line290->line1718]               "secretName": "mySecret"
+//@[line290->line1719]             }
     secureStringParam2: kv.getSecret('mySecret','secretVersion')
+//@[line291->line1722]             "reference": {
+//@[line291->line1723]               "keyVault": {
+//@[line291->line1724]                 "id": "[resourceId('Microsoft.KeyVault/vaults', 'testkeyvault')]"
+//@[line291->line1725]               },
+//@[line291->line1726]               "secretName": "mySecret",
+//@[line291->line1727]               "secretVersion": "secretVersion"
+//@[line291->line1728]             }
   }
 }
 
@@ -2052,21 +2052,8 @@ module secureModule2 'child/secureParams.bicep' = {
 //@[line300->line1768]         "mode": "Incremental",
 //@[line300->line1769]         "parameters": {
 //@[line300->line1770]           "secureStringParam1": {
-//@[line300->line1771]             "reference": {
-//@[line300->line1772]               "keyVault": {
-//@[line300->line1773]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'otherGroup'), 'Microsoft.KeyVault/vaults', 'testkeyvault')]"
-//@[line300->line1774]               },
-//@[line300->line1775]               "secretName": "mySecret"
-//@[line300->line1776]             }
 //@[line300->line1777]           },
 //@[line300->line1778]           "secureStringParam2": {
-//@[line300->line1779]             "reference": {
-//@[line300->line1780]               "keyVault": {
-//@[line300->line1781]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'otherGroup'), 'Microsoft.KeyVault/vaults', 'testkeyvault')]"
-//@[line300->line1782]               },
-//@[line300->line1783]               "secretName": "mySecret",
-//@[line300->line1784]               "secretVersion": "secretVersion"
-//@[line300->line1785]             }
 //@[line300->line1786]           }
 //@[line300->line1787]         },
 //@[line300->line1788]         "template": {
@@ -2102,7 +2089,20 @@ module secureModule2 'child/secureParams.bicep' = {
 //@[line301->line1763]       "name": "secureModule2",
   params: {
     secureStringParam1: scopedKv.getSecret('mySecret')
+//@[line303->line1771]             "reference": {
+//@[line303->line1772]               "keyVault": {
+//@[line303->line1773]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'otherGroup'), 'Microsoft.KeyVault/vaults', 'testkeyvault')]"
+//@[line303->line1774]               },
+//@[line303->line1775]               "secretName": "mySecret"
+//@[line303->line1776]             }
     secureStringParam2: scopedKv.getSecret('mySecret','secretVersion')
+//@[line304->line1779]             "reference": {
+//@[line304->line1780]               "keyVault": {
+//@[line304->line1781]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'otherGroup'), 'Microsoft.KeyVault/vaults', 'testkeyvault')]"
+//@[line304->line1782]               },
+//@[line304->line1783]               "secretName": "mySecret",
+//@[line304->line1784]               "secretVersion": "secretVersion"
+//@[line304->line1785]             }
   }
 }
 
@@ -2172,21 +2172,8 @@ module secureModuleLooped 'child/secureParams.bicep' = [for (secret, i) in secre
 //@[line337->line1829]         "mode": "Incremental",
 //@[line337->line1830]         "parameters": {
 //@[line337->line1831]           "secureStringParam1": {
-//@[line337->line1832]             "reference": {
-//@[line337->line1833]               "keyVault": {
-//@[line337->line1834]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', variables('vaults')[copyIndex()].vaultSub, variables('vaults')[copyIndex()].vaultRG), 'Microsoft.KeyVault/vaults', variables('vaults')[copyIndex()].vaultName)]"
-//@[line337->line1835]               },
-//@[line337->line1836]               "secretName": "[variables('secrets')[copyIndex()].name]"
-//@[line337->line1837]             }
 //@[line337->line1838]           },
 //@[line337->line1839]           "secureStringParam2": {
-//@[line337->line1840]             "reference": {
-//@[line337->line1841]               "keyVault": {
-//@[line337->line1842]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', variables('vaults')[copyIndex()].vaultSub, variables('vaults')[copyIndex()].vaultRG), 'Microsoft.KeyVault/vaults', variables('vaults')[copyIndex()].vaultName)]"
-//@[line337->line1843]               },
-//@[line337->line1844]               "secretName": "[variables('secrets')[copyIndex()].name]",
-//@[line337->line1845]               "secretVersion": "[variables('secrets')[copyIndex()].version]"
-//@[line337->line1846]             }
 //@[line337->line1847]           }
 //@[line337->line1848]         },
 //@[line337->line1849]         "template": {
@@ -2222,7 +2209,20 @@ module secureModuleLooped 'child/secureParams.bicep' = [for (secret, i) in secre
 //@[line338->line1824]       "name": "[format('secureModuleLooped-{0}', copyIndex())]",
   params: {
     secureStringParam1: loopedKv[i].getSecret(secret.name)
+//@[line340->line1832]             "reference": {
+//@[line340->line1833]               "keyVault": {
+//@[line340->line1834]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', variables('vaults')[copyIndex()].vaultSub, variables('vaults')[copyIndex()].vaultRG), 'Microsoft.KeyVault/vaults', variables('vaults')[copyIndex()].vaultName)]"
+//@[line340->line1835]               },
+//@[line340->line1836]               "secretName": "[variables('secrets')[copyIndex()].name]"
+//@[line340->line1837]             }
     secureStringParam2: loopedKv[i].getSecret(secret.name, secret.version)
+//@[line341->line1840]             "reference": {
+//@[line341->line1841]               "keyVault": {
+//@[line341->line1842]                 "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', variables('vaults')[copyIndex()].vaultSub, variables('vaults')[copyIndex()].vaultRG), 'Microsoft.KeyVault/vaults', variables('vaults')[copyIndex()].vaultName)]"
+//@[line341->line1843]               },
+//@[line341->line1844]               "secretName": "[variables('secrets')[copyIndex()].name]",
+//@[line341->line1845]               "secretVersion": "[variables('secrets')[copyIndex()].version]"
+//@[line341->line1846]             }
   }
 }]
 

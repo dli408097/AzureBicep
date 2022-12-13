@@ -52,4 +52,6 @@ public interface IExpressionVisitor
     void VisitCopyIndexExpression(CopyIndexExpression expression);
 
     void VisitLambdaExpression(LambdaExpression expression);
+
+    void VisitSecretReferenceExpression(SecretReferenceExpression expression);
 }

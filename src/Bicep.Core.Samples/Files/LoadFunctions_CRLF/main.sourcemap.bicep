@@ -93,6 +93,7 @@ module module1 'modulea.bicep' = {
 //@[line46->line124]         "mode": "Incremental",
 //@[line46->line125]         "parameters": {
 //@[line46->line126]           "text": {
+//@[line46->line127]             "value": "[variables('$fxv#13')]"
 //@[line46->line128]           }
 //@[line46->line129]         },
 //@[line46->line130]         "template": {
@@ -118,7 +119,6 @@ module module1 'modulea.bicep' = {
 //@[line47->line119]       "name": "module1",
   params: {
     text: loadTextContent('Assets/TextFile.LF.txt')
-//@[line49->line127]             "value": "[variables('$fxv#13')]"
   }
 }
 
@@ -133,6 +133,7 @@ module module2 'modulea.bicep' = {
 //@[line53->line157]         "mode": "Incremental",
 //@[line53->line158]         "parameters": {
 //@[line53->line159]           "text": {
+//@[line53->line160]             "value": "[variables('$fxv#14')]"
 //@[line53->line161]           }
 //@[line53->line162]         },
 //@[line53->line163]         "template": {
@@ -158,7 +159,6 @@ module module2 'modulea.bicep' = {
 //@[line54->line152]       "name": "module2",
   params: {
     text: loadFileAsBase64('Assets/binary')
-//@[line56->line160]             "value": "[variables('$fxv#14')]"
   }
 }
 
